@@ -1,3 +1,5 @@
+require 'aws-sdk'
+
 module Ruboty
   module Handlers
     class Witness < Base
@@ -15,6 +17,14 @@ module Ruboty
         `raspistill -w 1024 -h 768 -q 50 -o #{image.path}`
 
         message.reply(image.path)
+
+        file_name = "#{SecureRandom.hex}.jpg"
+
+        s3 = Aws::S3::Resource.new(region: 'ap-northeast-1')
+        obj = s3.bucket('raspberrypi-witness').object(file_name)
+        obj.upload_file(image.path)
+
+        message.reply(obj.public_url)
 
         image.close
      end
