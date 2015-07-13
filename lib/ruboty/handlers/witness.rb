@@ -2,15 +2,15 @@ module Ruboty
   module Handlers
     class Witness < Base
       on(
-        /say\z/i,
+        /say (?<talk_text>.+)\z/i,
         name: 'say',
         description: "ゆっくりがしゃべるよ"
       )
 
       def say(message)
         aquestalk_path = ENV['AQUES_TALK_PATH']
-        message.reply(aquestalk_path)
-       `#{aquestalk_path}/AquesTalkPi -b 'ゆっくりしていってね?' | aplay`
+        `#{aquestalk_path}/AquesTalkPi -b '#{message[:talk_text]}' | aplay`
+        message.reply(message[:talk_text])
      end
     end
   end
