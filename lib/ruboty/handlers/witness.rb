@@ -23,7 +23,7 @@ module Ruboty
       def default(message)
         message[:talk_text].split("\n").each do |text|
           talk(text)
-          message.reply(still)
+          still(message)
         end
       end
 
@@ -34,10 +34,14 @@ module Ruboty
         `#{aquestalk_path}/AquesTalkPi -b -s 80 '#{text}' | aplay`
       end
 
-      def still
-        Tempfile.open(%w(witness .jpg)) do |image|
-          `raspistill -w 1024 -h 768 -q 50 -o #{image.path}`
-          upload_s3(image.path)
+      def still(message)
+        image = Tempfile.new(%w(witness .jpg))
+        `raspistill -w 1024 -h 768 -q 50 -o #{image.path}`
+
+        Thread.new(image) do |img|
+          url = upload_s3(img.path)
+          message.reply(url)
+          img.close
         end
       end
 
