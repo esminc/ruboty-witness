@@ -18,7 +18,7 @@ module Ruboty
 
       def talk(text)
         aquestalk_path = ENV['AQUES_TALK_PATH']
-        `#{aquestalk_path}/AquesTalkPi -b '#{text}' | aplay`
+        `#{aquestalk_path}/AquesTalkPi -b -s 80 '#{text}' | aplay`
       end
 
       def still
