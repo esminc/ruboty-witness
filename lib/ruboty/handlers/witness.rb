@@ -21,9 +21,11 @@ module Ruboty
       end
 
       def default(message)
-        message[:talk_text].split("\n").each do |text|
+        rows = message[:talk_text].split("\n")
+
+        rows.each.with_index(1) do |text, ix|
           talk(text)
-          still(message)
+          still(message) if rows.size == 1 || rows.size != ix
         end
       end
 
