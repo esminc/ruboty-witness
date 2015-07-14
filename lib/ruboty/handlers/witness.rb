@@ -10,7 +10,7 @@ module Ruboty
       )
 
       on(
-        /(?<talk_text>.+)\z/i,
+        /(?<talk_text>.+)\z/im,
         missing: true,
         name: 'default',
         description: "ゆっくりがしゃべるよ"
