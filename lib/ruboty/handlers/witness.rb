@@ -18,7 +18,6 @@ module Ruboty
 
       def say(message)
         talk(message[:talk_text])
-        message.reply(still)
       end
 
       def default(message)
