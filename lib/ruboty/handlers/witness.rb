@@ -21,8 +21,10 @@ module Ruboty
       end
 
       def default(message)
-        talk(message[:talk_text])
-        message.reply(still)
+        message[:talk_text].split("\n").each do |text|
+          talk(text)
+          message.reply(still)
+        end
       end
 
       private
