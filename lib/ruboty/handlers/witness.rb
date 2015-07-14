@@ -9,7 +9,19 @@ module Ruboty
         description: "ゆっくりがしゃべるよ"
       )
 
+      on(
+        /(?<talk_text>.+)\z/i,
+        missing: true,
+        name: 'default',
+        description: "ゆっくりがしゃべるよ"
+      )
+
       def say(message)
+        talk(message[:talk_text])
+        message.reply(still)
+      end
+
+      def default(message)
         talk(message[:talk_text])
         message.reply(still)
       end
