@@ -38,7 +38,7 @@ module Ruboty
 
       def still(message)
         image = Tempfile.new(%w(witness .jpg))
-        `raspistill -w 1024 -h 768 -q 50 -o #{image.path}`
+        `raspistill -t 2 -w 1024 -h 768 -q 50 -o #{image.path}`
 
         Thread.new(image) do |img|
           url = upload_s3(img.path)
