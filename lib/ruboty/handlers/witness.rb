@@ -25,7 +25,7 @@ module Ruboty
 
         rows.each.with_index(1) do |text, ix|
           talk(text)
-          still(message) if rows.size == 1 || rows.size != ix
+          still(message) if text.size.nonzero? && (rows.size == 1 || rows.size != ix)
         end
       end
 
