@@ -1,4 +1,5 @@
 require 'aws-sdk'
+require 'shellwords'
 
 module Ruboty
   module Handlers
@@ -37,12 +38,12 @@ module Ruboty
 
       def talk(text)
         aquestalk_path = ENV['AQUES_TALK_PATH']
-        `#{aquestalk_path}/AquesTalkPi -b -s 80 '#{text}' | aplay`
+        `#{Shellwords.shellescape(aquestalk_path)}/AquesTalkPi -b -s 80 '#{Shellwords.shellescape(text)}' | aplay`
       end
 
       def still(message)
         image = Tempfile.new(%w(witness .jpg))
-        `raspistill -t 2 -w 1024 -h 768 -q 50 -o #{image.path}`
+        `raspistill -t 2 -w 1024 -h 768 -q 50 -o #{Shellwords.shellescape(image.path)}`
 
         Thread.new(image) do |img|
           url = upload_s3(img.path)
