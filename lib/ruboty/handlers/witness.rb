@@ -53,6 +53,7 @@ module Ruboty
       end
 
       def default(message)
+        return if message.from_name == ENV['RUBOTY_NAME']
         rows = message[:talk_text].split("\n")
 
         rows.each.with_index(1) do |text, ix|
