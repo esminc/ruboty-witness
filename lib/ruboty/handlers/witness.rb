@@ -11,11 +11,42 @@ module Ruboty
       )
 
       on(
+        /yaw (?<talk_text>.+)\z/i,
+        name: 'yaw',
+        description: "上下に首を振ります"
+      )
+
+      on(
+        /pitch (?<talk_text>.+)\z/i,
+        name: 'pitch',
+        description: "左右に首を振ります"
+      )
+
+      on(
+        /reset\z/i,
+        name: 'reset',
+        description: "初期位置に戻ります"
+      )
+
+      on(
         /(?<talk_text>.+)\z/im,
         missing: true,
         name: 'default',
         description: "ゆっくりがしゃべるよ"
       )
+
+      def yaw(message)
+        swing(1, message[:talk_text])
+      end
+
+      def pitch(message)
+        swing(0, message[:talk_text])
+      end
+
+      def reset(message)
+        swing(0, '50%')
+        swing(1, '50%')
+      end
 
       def say(message)
         talk(message[:talk_text])
@@ -35,6 +66,10 @@ module Ruboty
       end
 
       private
+
+      def swing(port, position)
+        `echo #{port}=#{Shellwords.shellescape(position)} > /dev/servoblaster`
+      end
 
       def talk(text)
         aquestalk_path = ENV['AQUES_TALK_PATH']
