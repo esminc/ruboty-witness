@@ -1,9 +1,17 @@
 require 'aws-sdk'
 require 'shellwords'
+require 'swing_servo_pi'
 
 module Ruboty
   module Handlers
     class Witness < Base
+      attr_reader :servo
+      def initialize(robot)
+        @servo = SwingServoPi::Servo.new(25, 29)
+
+        super
+      end
+
       on(
         /say (?<talk_text>.+)\z/i,
         name: 'say',
@@ -36,16 +44,21 @@ module Ruboty
       )
 
       def yaw(message)
-        swing(1, message[:talk_text])
+        servo.yawing(message[:talk_text].to_i)
+        true
+      rescue RangeError => e
+        message.reply e.message
       end
 
       def pitch(message)
-        swing(0, message[:talk_text])
+        servo.pitching(message[:talk_text].to_i)
+        true
+      rescue RangeError => e
+        message.reply e.message
       end
 
       def reset(message)
-        swing(0, '50%')
-        swing(1, '50%')
+        servo.reset
       end
 
       def say(message)
@@ -67,10 +80,6 @@ module Ruboty
       end
 
       private
-
-      def swing(port, position)
-        `echo #{port}=#{Shellwords.shellescape(position)} > /dev/servoblaster`
-      end
 
       def talk(text)
         aquestalk_path = ENV['AQUES_TALK_PATH']
